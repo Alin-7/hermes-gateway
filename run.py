@@ -26,7 +26,11 @@ threading.Thread(target=start_health_check_server, daemon=True).start()
 
 # Determine paths
 baseline_config_path = "/app/config.yaml"
-config_path = os.path.expanduser("~/.hermes/config.yaml")
+hermes_home = os.getenv("HERMES_HOME")
+if hermes_home:
+    config_path = os.path.join(hermes_home, "config.yaml")
+else:
+    config_path = os.path.expanduser("~/.hermes/config.yaml")
 
 print(f"Target config path: {config_path}")
 
