@@ -1,18 +1,21 @@
 import os
 import yaml
 
-config_path = "/root/.hermes/config.yaml"
+# Determine paths
+baseline_config_path = "/app/config.yaml"
+config_path = os.path.expanduser("~/.hermes/config.yaml")
 
-# Load config if it exists
-if os.path.exists(config_path):
+print(f"Target config path: {config_path}")
+
+# Load baseline config
+config = {}
+if os.path.exists(baseline_config_path):
     try:
-        with open(config_path, "r", encoding="utf-8") as f:
+        with open(baseline_config_path, "r", encoding="utf-8") as f:
             config = yaml.safe_load(f) or {}
+        print("Loaded baseline configuration.")
     except Exception as e:
-        print(f"Error reading config: {e}")
-        config = {}
-else:
-    config = {}
+        print(f"Error reading baseline config: {e}")
 
 # Ensure model dictionary exists
 if "model" not in config:
@@ -32,13 +35,14 @@ if bynara_api_key and "custom_providers" in config:
             provider["api_key"] = bynara_api_key
             print("Injected BYNARA_API_KEY into Router.bynara.id provider configuration.")
 
-# Write updated config back
+# Write updated config to user's home directory (.hermes/config.yaml)
 os.makedirs(os.path.dirname(config_path), exist_ok=True)
 try:
     with open(config_path, "w", encoding="utf-8") as f:
         yaml.safe_dump(config, f)
+    print(f"Successfully wrote configuration to {config_path}")
 except Exception as e:
-    print(f"Error writing config: {e}")
+    print(f"Error writing config to home directory: {e}")
 
 # Start the gateway
 print("Starting Hermes Gateway...")
