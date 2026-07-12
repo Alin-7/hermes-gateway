@@ -1,4 +1,5 @@
 import os
+import sys
 import yaml
 
 # Determine paths
@@ -44,6 +45,7 @@ try:
 except Exception as e:
     print(f"Error writing config to home directory: {e}")
 
-# Start the gateway
-print("Starting Hermes Gateway...")
-os.system("gateway run")
+# Start the gateway using the python module path to avoid PATH resolution issues
+cmd = f"{sys.executable} -m hermes_cli.main gateway run"
+print(f"Starting Hermes Gateway via command: {cmd}")
+os.system(cmd)
