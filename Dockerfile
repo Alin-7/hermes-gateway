@@ -1,7 +1,12 @@
 FROM nousresearch/hermes-agent:latest
 
-# Zeabur 会自动识别 EXPOSE 的端口并生成公网域名
+# Copy configuration baseline
+COPY config.yaml /root/.hermes/config.yaml
+
+# Copy launcher wrapper
+COPY run.py /run.py
+
 EXPOSE 7860
 ENV PORT=7860
 
-CMD ["gateway", "run"]
+CMD ["python", "/run.py"]
