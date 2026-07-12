@@ -245,7 +245,7 @@ curator:
   prune_builtins: true
   stale_after_days: 30
 custom_providers:
-- api_key: sk-nry--uXwXuDAKhy3Z44Fc4ycMTPpDRw5jhdsGdHFb7Xrg1M
+- api_key: ''
   base_url: https://router.bynara.id/v1
   model: mistral-large
   name: Router.bynara.id
