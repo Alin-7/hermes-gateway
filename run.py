@@ -1,6 +1,28 @@
 import os
 import sys
 import yaml
+import threading
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
+# A very simple HTTP server to satisfy Render's port scan/health checks
+class HealthCheckHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-Type", "text/plain")
+        self.end_headers()
+        self.wfile.write(b"OK")
+
+def start_health_check_server():
+    port = int(os.getenv("PORT", 7860))
+    print(f"Starting health check listener on port {port}...")
+    try:
+        server = HTTPServer(('0.0.0.0', port), HealthCheckHandler)
+        server.serve_forever()
+    except Exception as e:
+        print(f"Health check server error: {e}")
+
+# Run health check server in a background thread
+threading.Thread(target=start_health_check_server, daemon=True).start()
 
 # Determine paths
 baseline_config_path = "/app/config.yaml"
