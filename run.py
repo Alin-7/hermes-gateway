@@ -62,6 +62,13 @@ if bynara_api_key and "custom_providers" in config:
             provider["api_key"] = bynara_api_key
             print("Injected BYNARA_API_KEY into Router.bynara.id provider configuration.")
 
+tcloudbase_api_key = os.getenv("TCLOUDBASE_API_KEY")
+if tcloudbase_api_key and "custom_providers" in config:
+    for provider in config["custom_providers"]:
+        if provider.get("name") == "tcloudbase":
+            provider["api_key"] = tcloudbase_api_key
+            print("Injected TCLOUDBASE_API_KEY into tcloudbase provider configuration.")
+
 # Write updated config to user's home directory (.hermes/config.yaml)
 os.makedirs(os.path.dirname(config_path), exist_ok=True)
 try:

@@ -246,9 +246,9 @@ curator:
   stale_after_days: 30
 custom_providers:
 - api_key: ''
-  base_url: https://router.bynara.id/v1
-  model: mistral-large
-  name: Router.bynara.id
+  base_url: https://alin-d2giv6hfeb8839d54.service.tcloudbase.com
+  model: hy3
+  name: tcloudbase
 dashboard:
   basic_auth:
     password: ''
@@ -429,9 +429,9 @@ memory:
   write_approval: false
 model:
   api_key: ''
-  base_url: https://router.bynara.id/v1
-  default: tencent-hy3
-  provider: custom:router.bynara.id
+  base_url: https://alin-d2giv6hfeb8839d54.service.tcloudbase.com
+  default: hy3
+  provider: custom:tcloudbase
 model_catalog:
   enabled: true
   providers: {}
