@@ -7,10 +7,46 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 # A very simple HTTP server to satisfy Render's port scan/health checks
 class HealthCheckHandler(BaseHTTPRequestHandler):
     def do_GET(self):
-        self.send_response(200)
-        self.send_header("Content-Type", "text/plain")
-        self.end_headers()
-        self.wfile.write(b"OK")
+        if "/logs" in self.path:
+            # Simple token protection
+            if "token=weixin-tcb-666" not in self.path:
+                self.send_response(403)
+                self.end_headers()
+                self.wfile.write(b"Forbidden")
+                return
+            
+            self.send_response(200)
+            self.send_header("Content-Type", "text/plain; charset=utf-8")
+            self.end_headers()
+            log_path = "/opt/data/logs/agent.log"
+            if os.path.exists(log_path):
+                with open(log_path, "r", encoding="utf-8", errors="ignore") as f:
+                    lines = f.readlines()
+                    self.wfile.write("".join(lines[-200:]).encode("utf-8"))
+            else:
+                self.wfile.write(b"No agent.log file found.")
+        elif "/gateway-logs" in self.path:
+            if "token=weixin-tcb-666" not in self.path:
+                self.send_response(403)
+                self.end_headers()
+                self.wfile.write(b"Forbidden")
+                return
+            
+            self.send_response(200)
+            self.send_header("Content-Type", "text/plain; charset=utf-8")
+            self.end_headers()
+            log_path = "/opt/data/logs/gateway.log"
+            if os.path.exists(log_path):
+                with open(log_path, "r", encoding="utf-8", errors="ignore") as f:
+                    lines = f.readlines()
+                    self.wfile.write("".join(lines[-200:]).encode("utf-8"))
+            else:
+                self.wfile.write(b"No gateway.log file found.")
+        else:
+            self.send_response(200)
+            self.send_header("Content-Type", "text/plain")
+            self.end_headers()
+            self.wfile.write(b"OK")
 
     def do_HEAD(self):
         self.send_response(200)
