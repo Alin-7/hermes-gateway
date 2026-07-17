@@ -12,6 +12,11 @@ class HealthCheckHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(b"OK")
 
+    def do_HEAD(self):
+        self.send_response(200)
+        self.send_header("Content-Type", "text/plain")
+        self.end_headers()
+
 def start_health_check_server():
     port = int(os.getenv("PORT", 7860))
     print(f"Starting health check listener on port {port}...")
